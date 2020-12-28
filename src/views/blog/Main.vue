@@ -42,7 +42,7 @@
 
         </div>
 
-        <el-card shadow="never" style="margin-bottom: 20px;padding: 20px 0px 20px 0px;text-align: center" v-if="!blogs||blogs.length==0">
+        <el-card shadow="never" style="margin-bottom: 20px;padding: 20px 0px 20px 0px;text-align: center" v-if="!blogs||blogs.length===0">
             <font style="font-size: 30px;color:#dddddd ">
                 <b>还没有博客 (╯°Д°)╯︵ ┻━┻</b>
             </font>
@@ -50,99 +50,99 @@
     </div>
 </template>
 <script>
-    import { mapGetters } from 'vuex'
-    import GistApi from '@/api/gist'
-    export default {
-        data() {
-            return {
-                query: {
-                    page: 1,
-                    pageSize: 5,
-                    pageNumber: 1
-                },
-                loading: false,
-                searchKey: "",
-                blogs: []
-            }
-        },
-        computed: {
-            ...mapGetters([
-                'token',
-            ])
-        },
-        mounted() {
-            this.list()
-        },
-        methods: {
-            list() {
-                this.blogs = []
-                this.loading = true
-                GistApi.list(this.query).then((response) => {
-                    let result = response.data
-                    let pageNumber = this.$util.parseHeaders(response.headers)
-                    if (pageNumber) {
-                        this.query.pageNumber = pageNumber
-                    }
-                    for (let i = 0; i < result.length; i++) {
-                        for (let key in result[i].files) {
-                            let data = {}
-                            data['title'] = key
-                            data['url'] = result[i].files[key]
-                            data['description'] = result[i]['description']
-                            data['id'] = result[i]['id']
-                            data['createTime'] = this.$util.utcToLocal(result[i]['created_at'])
-                            data['updateTime'] = this.$util.utcToLocal(result[i]['updated_at'])
-                            data['hide'] = false
-                            this.blogs.push(data)
-                            break
-                        }
-                    }
-                }).then(() => this.loading = false)
-            },
-            search() {
-                for (let i = 0; i < this.blogs.length; i++) {
-                    this.blogs[i].hide = this.blogs[i].title.indexOf(this.searchKey) < 0
-                }
-            },
-            editBlog(index) {
-                if (!this.token) {
-                    this.$message({
-                        message: '请绑定有效的Token',
-                        type: 'warning'
-                    })
-                    return
-                }
-                this.$router.push('/user/blog/edit/' + this.blogs[index].id)
-            },
-            deleteBlog(index) {
-                this.$confirm('是否永久删除该博客?', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                }).then(() => {
-                    let blog = this.blogs[index]
-                    GistApi.delete(blog.id).then((result) => {
-                        this.$message({
-                            message: '删除成功',
-                            type: 'success'
-                        })
-                        this.blogs.splice(index, 1)
-                    })
-                })
-            },
-            goAdd() {
-                if (!this.token) {
-                    this.$message({
-                        message: '请绑定有效的Token',
-                        type: 'warning'
-                    })
-                    return
-                }
-                this.$router.push('/user/blog/add')
-            },
-            goDetails(id) {
-                this.$router.push("/user/blog/details/" + id)
-            }
-        }
+import { mapGetters } from 'vuex'
+import GistApi from '@/api/gist'
+export default {
+  data () {
+    return {
+      query: {
+        page: 1,
+        pageSize: 5,
+        pageNumber: 1
+      },
+      loading: false,
+      searchKey: '',
+      blogs: []
     }
+  },
+  computed: {
+    ...mapGetters([
+      'token'
+    ])
+  },
+  mounted () {
+    this.list()
+  },
+  methods: {
+    list () {
+      this.blogs = []
+      this.loading = true
+      GistApi.list(this.query).then((response) => {
+        let result = response.data
+        let pageNumber = this.$util.parseHeaders(response.headers)
+        if (pageNumber) {
+          this.query.pageNumber = pageNumber
+        }
+        for (let i = 0; i < result.length; i++) {
+          for (let key in result[i].files) {
+            let data = {}
+            data['title'] = key
+            data['url'] = result[i].files[key]
+            data['description'] = result[i]['description']
+            data['id'] = result[i]['id']
+            data['createTime'] = this.$util.utcToLocal(result[i]['created_at'])
+            data['updateTime'] = this.$util.utcToLocal(result[i]['updated_at'])
+            data['hide'] = false
+            this.blogs.push(data)
+            break
+          }
+        }
+      }).then(() => this.loading = false)
+    },
+    search () {
+      for (let i = 0; i < this.blogs.length; i++) {
+        this.blogs[i].hide = this.blogs[i].title.indexOf(this.searchKey) < 0
+      }
+    },
+    editBlog (index) {
+      if (!this.token) {
+        this.$message({
+          message: '请绑定有效的Token',
+          type: 'warning'
+        })
+        return
+      }
+      this.$router.push('/user/blog/edit/' + this.blogs[index].id)
+    },
+    deleteBlog (index) {
+      this.$confirm('是否永久删除该博客?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        let blog = this.blogs[index]
+        GistApi.delete(blog.id).then((result) => {
+          this.$message({
+            message: '删除成功',
+            type: 'success'
+          })
+          this.blogs.splice(index, 1)
+        })
+      })
+    },
+    goAdd () {
+      if (!this.token) {
+        this.$message({
+          message: '请绑定有效的Token',
+          type: 'warning'
+        })
+        return
+      }
+      this.$router.push('/user/blog/add')
+    },
+    goDetails (id) {
+      this.$router.push('/user/blog/details/' + id)
+    }
+  }
+}
 </script>

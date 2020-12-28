@@ -47,42 +47,42 @@
 </template>
 <script>
 
-    export default {
-        data() {
-            return {
-                active: "deploy",
-                deploy: {
-                    images: [
-                        require('../../assets/deploy0.png'),
-                        require('../../assets/deploy1.png'),
-                        require('../../assets/deploy2.png')
-                    ],
-                    status: "process",
-                    active: 0,
-                },
-                use: {
-                    images: [
-                        require('../../assets/use0.png'),
-                        require('../../assets/use1.png'),
-                        require('../../assets/use2.png')
-                    ],
-                    status: "process",
-                    active: 0,
-                }
-            }
-        },
-        mounted() {
-
-        },
-        methods: {
-            deployChange(index) {
-                this.deploy.status = index == 2 ? "success" : "process"
-                this.deploy.active = index
-            },
-            useChange(index) {
-                this.use.status = index == 2 ? "success" : "process"
-                this.use.active = index
-            }
-        }
+export default {
+  data () {
+    return {
+      active: 'deploy',
+      deploy: {
+        images: [
+          require('../../assets/deploy0.png'),
+          require('../../assets/deploy1.png'),
+          require('../../assets/deploy2.png')
+        ],
+        status: 'process',
+        active: 0
+      },
+      use: {
+        images: [
+          require('../../assets/use0.png'),
+          require('../../assets/use1.png'),
+          require('../../assets/use2.png')
+        ],
+        status: 'process',
+        active: 0
+      }
     }
+  },
+  mounted () {
+
+  },
+  methods: {
+    deployChange (index) {
+      this.deploy.status = index === 2 ? 'success' : 'process'
+      this.deploy.active = index
+    },
+    useChange (index) {
+      this.use.status = index === 2 ? 'success' : 'process'
+      this.use.active = index
+    }
+  }
+}
 </script>

@@ -61,7 +61,7 @@
             </div>
         </div>
 
-        <el-card shadow="never" style="margin-bottom: 20px;padding: 20px 0px 20px 0px;text-align: center" v-if="!projects||projects.length==0">
+        <el-card shadow="never" style="margin-bottom: 20px;padding: 20px 0px 20px 0px;text-align: center" v-if="!projects||projects.length===0">
             <font style="font-size: 30px;color:#dddddd ">
                 <b>还没有开源项目 (╯°Д°)╯︵ ┻━┻</b>
             </font>
@@ -69,68 +69,68 @@
     </div>
 </template>
 <script>
-    import { mapGetters } from 'vuex'
-    import ProjectApi from "@/api/project"
-    export default {
-        data() {
-            return {
-                query: {
-                    page: 1,
-                    pageSize: 5,
-                    pageNumber: 1
-                },
-                loading: false,
-                searchKey: "",
-                projects: []
-            }
-        },
-        computed: {
-            ...mapGetters([
-                'token',
-            ])
-        },
-        mounted() {
-            this.list()
-        },
-        methods: {
-            list() {
-                this.loading = true
-                ProjectApi.list(this.query).then((response) => {
-                    let result = response.data
-                    let pageNumber = this.$util.parseHeaders(response.headers)
-                    if (pageNumber) {
-                        this.query.pageNumber = pageNumber
-                    }
-                    for (let i = 0; i < result.length; i++) {
-                        let item = result[i]
-                        let data = {}
-                        data.id = item['id']
-                        data.name = item['name']
-                        data.url = item['html_url']
-                        data.description = item['description']
-                        data.stargazersCount = item['stargazers_count']
-                        data.watchersCount = item['watchers_count']
-                        data.forksCount = item['forks_count']
-                        data.language = item['language']
-                        data.license = item['license'] ? item['license']['spdx_id'] : null
-                        data.createTime = this.$util.utcToLocal(item['created_at'])
-                        data.updateTime = this.$util.utcToLocal(item['updated_at'])
-                        data.hide = false
-                        this.projects.push(data)
-                    }
-                }).then(() => this.loading = false)
-            },
-            search() {
-                for (let i = 0; i < this.projects.length; i++) {
-                    this.projects[i].hide = this.projects[i].name.indexOf(this.searchKey) < 0
-                }
-            },
-            goDetails(name) {
-                this.$router.push("/user/project/details/" + name)
-            },
-            goGithub(url) {
-                window.open(url)
-            }
-        }
+import { mapGetters } from 'vuex'
+import ProjectApi from '@/api/project'
+export default {
+  data () {
+    return {
+      query: {
+        page: 1,
+        pageSize: 5,
+        pageNumber: 1
+      },
+      loading: false,
+      searchKey: '',
+      projects: []
     }
+  },
+  computed: {
+    ...mapGetters([
+      'token'
+    ])
+  },
+  mounted () {
+    this.list()
+  },
+  methods: {
+    list () {
+      this.loading = true
+      ProjectApi.list(this.query).then((response) => {
+        let result = response.data
+        let pageNumber = this.$util.parseHeaders(response.headers)
+        if (pageNumber) {
+          this.query.pageNumber = pageNumber
+        }
+        for (let i = 0; i < result.length; i++) {
+          let item = result[i]
+          let data = {}
+          data.id = item['id']
+          data.name = item['name']
+          data.url = item['html_url']
+          data.description = item['description']
+          data.stargazersCount = item['stargazers_count']
+          data.watchersCount = item['watchers_count']
+          data.forksCount = item['forks_count']
+          data.language = item['language']
+          data.license = item['license'] ? item['license']['spdx_id'] : null
+          data.createTime = this.$util.utcToLocal(item['created_at'])
+          data.updateTime = this.$util.utcToLocal(item['updated_at'])
+          data.hide = false
+          this.projects.push(data)
+        }
+      }).then(() => this.loading = false)
+    },
+    search () {
+      for (let i = 0; i < this.projects.length; i++) {
+        this.projects[i].hide = this.projects[i].name.indexOf(this.searchKey) < 0
+      }
+    },
+    goDetails (name) {
+      this.$router.push('/user/project/details/' + name)
+    },
+    goGithub (url) {
+      window.open(url)
+    }
+  }
+}
 </script>

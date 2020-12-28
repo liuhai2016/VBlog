@@ -39,13 +39,12 @@
                         {{project.forksCount}}
                     </el-col>
                     <el-col :span="8" style="text-align: right">
-                        
+
                         <el-tag size="small" type="danger" v-if="project.license">{{project.license}}</el-tag>
                         <el-tag size="small" type="success">{{project.language}}</el-tag>
                     </el-col>
 
                 </el-row>
-
 
             </div>
             <div v-html="project.content" v-if="project.content" class="markdown-body" style="padding-top: 20px"></div>
@@ -58,49 +57,48 @@
     </div>
 </template>
 <script>
-    import { mapGetters } from 'vuex'
-    import ProjectApi from '@/api/project'
-    export default {
-        data() {
-            return {
-                project: {
-                    name: ""
-                },
-                loading: false,
-            }
-        },
-        computed: {
-            ...mapGetters([
-                'token',
-            ])
-        },
-        mounted() {
-            this.loading = true
-            this.project.name = this.$route.params.name
-            ProjectApi.single(this.project.name).then((response) => {
-                let result = response.data
-                let base64 = require('js-base64').Base64
-                this.project.id = result['id']
-                this.project.url = result['html_url']
-                this.project.stargazersCount = result['stargazers_count']
-                this.project.watchersCount = result['watchers_count']
-                this.project.forksCount = result['forks_count']
-                this.project.language = result['language']
-                this.project.description = result['description']
-                this.project.license = result['license'] ? result['license']['spdx_id'] : null
-                this.project.content = this.$markdown(base64.decode(result['readme_content']))
-                this.project.createTime = this.$util.utcToLocal(result['created_at'])
-                this.project.updateTime = this.$util.utcToLocal(result['updated_at'])
-            }).catch(() => this.loading = false).then(() => this.loading = false)
-
-        },
-        methods: {
-            goGithub(url) {
-                window.open(url)
-            },
-            more() {
-                this.$router.push('/user/project/main')
-            }
-        }
+import { mapGetters } from 'vuex'
+import ProjectApi from '@/api/project'
+export default {
+  data () {
+    return {
+      project: {
+        name: ''
+      },
+      loading: false
     }
+  },
+  computed: {
+    ...mapGetters([
+      'token'
+    ])
+  },
+  mounted () {
+    this.loading = true
+    this.project.name = this.$route.params.name
+    ProjectApi.single(this.project.name).then((response) => {
+      let result = response.data
+      let base64 = require('js-base64').Base64
+      this.project.id = result['id']
+      this.project.url = result['html_url']
+      this.project.stargazersCount = result['stargazers_count']
+      this.project.watchersCount = result['watchers_count']
+      this.project.forksCount = result['forks_count']
+      this.project.language = result['language']
+      this.project.description = result['description']
+      this.project.license = result['license'] ? result['license']['spdx_id'] : null
+      this.project.content = this.$markdown(base64.decode(result['readme_content']))
+      this.project.createTime = this.$util.utcToLocal(result['created_at'])
+      this.project.updateTime = this.$util.utcToLocal(result['updated_at'])
+    }).catch(() => this.loading = false).then(() => this.loading = false)
+  },
+  methods: {
+    goGithub (url) {
+      window.open(url)
+    },
+    more () {
+      this.$router.push('/user/project/main')
+    }
+  }
+}
 </script>

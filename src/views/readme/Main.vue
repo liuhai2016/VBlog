@@ -11,23 +11,23 @@
     </div>
 </template>
 <script>
-    import ProjectApi from '@/api/project'
-    export default {
-        data() {
-            return {
-                loading: false,
-                text: ""
-            }
-        },
-        mounted() {
-            this.loading = true
-            ProjectApi.getBlogReadme().then((response) => {
-                let result = response.data
-                let base64 = require('js-base64').Base64
-                this.text = base64.decode(result.content)
-            }).then(() => this.loading = false).catch(() => this.loading = false)
-        }
+import ProjectApi from '@/api/project'
+export default {
+  data () {
+    return {
+      loading: false,
+      text: ''
     }
+  },
+  mounted () {
+    this.loading = true
+    ProjectApi.getBlogReadme().then((response) => {
+      let result = response.data
+      let base64 = require('js-base64').Base64
+      this.text = base64.decode(result.content)
+    }).then(() => this.loading = false).catch(() => this.loading = false)
+  }
+}
 </script>
 
 <style>

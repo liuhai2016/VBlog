@@ -65,94 +65,92 @@
     </div>
 </template>
 <script>
-    import { mapGetters } from 'vuex'
-    import UserApi from '@/api/user'
-    export default {
-        data() {
-            return {
-                activeTab: "followers",
-                followers: {
-                    query: {
-                        page: 1,
-                        pageSize: 9,
-                        pageNumber: 1
-                    },
-                    loading: false,
-                    list: []
-                },
-                following: {
-                    query: {
-                        page: 1,
-                        pageSize: 9,
-                        pageNumber: 1
-                    },
-                    loading: false,
-                    list: []
-                }
-            }
+import { mapGetters } from 'vuex'
+import UserApi from '@/api/user'
+export default {
+  data () {
+    return {
+      activeTab: 'followers',
+      followers: {
+        query: {
+          page: 1,
+          pageSize: 9,
+          pageNumber: 1
         },
-        computed: {
-            ...mapGetters([
-                'githubUsername',
-                'followersTotal',
-                'followingTotal'
-            ])
+        loading: false,
+        list: []
+      },
+      following: {
+        query: {
+          page: 1,
+          pageSize: 9,
+          pageNumber: 1
         },
-        mounted() {
-            this.onSelect()
-
-        },
-        methods: {
-            onSelect() {
-                switch (this.activeTab) {
-                    case "followers":
-                        this.listFollowers()
-                        break
-                    case "following":
-                        this.listFollowing()
-                        break
-                    default:
-                        break
-                }
-            },
-            listFollowers() {
-                this.followers.loading = true
-                UserApi.followers(this.followers.query).then((response) => {
-                    let result = response.data
-                    let pageNumber = this.$util.parseHeaders(response.headers)
-                    if (pageNumber) {
-                        this.followers.query.pageNumber = pageNumber
-                    }
-                    this.followers.list = []
-                    for (let i = 0; i < result.length; i++) {
-                        let data = {}
-                        data.name = result[i]['login']
-                        data.avatarUrl = result[i]['avatar_url']
-                        data.htmlUrl = result[i]['html_url']
-                        this.followers.list.push(data)
-                    }
-                }).then(() => this.followers.loading = false)
-            },
-            listFollowing() {
-                this.following.loading = true
-                UserApi.following(this.following.query).then((response) => {
-                    let result = response.data
-                    let pageNumber = this.$util.parseHeaders(response.headers)
-                    if (pageNumber) {
-                        this.following.query.pageNumber = pageNumber
-                    }
-                    this.following.list = []
-                    for (let i = 0; i < result.length; i++) {
-                        let data = {}
-                        data.name = result[i]['login']
-                        data.avatarUrl = result[i]['avatar_url']
-                        data.htmlUrl = result[i]['html_url']
-                        this.following.list.push(data)
-                    }
-                }).then(() => this.following.loading = false)
-            },
-
-
-        }
+        loading: false,
+        list: []
+      }
     }
+  },
+  computed: {
+    ...mapGetters([
+      'githubUsername',
+      'followersTotal',
+      'followingTotal'
+    ])
+  },
+  mounted () {
+    this.onSelect()
+  },
+  methods: {
+    onSelect () {
+      switch (this.activeTab) {
+        case 'followers':
+          this.listFollowers()
+          break
+        case 'following':
+          this.listFollowing()
+          break
+        default:
+          break
+      }
+    },
+    listFollowers () {
+      this.followers.loading = true
+      UserApi.followers(this.followers.query).then((response) => {
+        let result = response.data
+        let pageNumber = this.$util.parseHeaders(response.headers)
+        if (pageNumber) {
+          this.followers.query.pageNumber = pageNumber
+        }
+        this.followers.list = []
+        for (let i = 0; i < result.length; i++) {
+          let data = {}
+          data.name = result[i]['login']
+          data.avatarUrl = result[i]['avatar_url']
+          data.htmlUrl = result[i]['html_url']
+          this.followers.list.push(data)
+        }
+      }).then(() => this.followers.loading = false)
+    },
+    listFollowing () {
+      this.following.loading = true
+      UserApi.following(this.following.query).then((response) => {
+        let result = response.data
+        let pageNumber = this.$util.parseHeaders(response.headers)
+        if (pageNumber) {
+          this.following.query.pageNumber = pageNumber
+        }
+        this.following.list = []
+        for (let i = 0; i < result.length; i++) {
+          let data = {}
+          data.name = result[i]['login']
+          data.avatarUrl = result[i]['avatar_url']
+          data.htmlUrl = result[i]['html_url']
+          this.following.list.push(data)
+        }
+      }).then(() => this.following.loading = false)
+    }
+
+  }
+}
 </script>

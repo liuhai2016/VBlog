@@ -7,12 +7,12 @@
 </template>
 
 <script>
-  export default {
-    name: 'AppMain',
-    computed: {
+export default {
+  name: 'AppMain',
+  computed: {
 
-    }
   }
+}
 </script>
 
 <style>

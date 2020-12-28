@@ -6,15 +6,14 @@
 </template>
 
 <script>
-    import { mapGetters } from 'vuex'
-    import Bottombar from './components/Bottombar'
-    import AppMain from './components/AppMain'
-    export default {
-        components: {
-            Bottombar,
-            AppMain
-        },
-    }
+import Bottombar from './components/Bottombar'
+import AppMain from './components/AppMain'
+export default {
+  components: {
+    Bottombar,
+    AppMain
+  }
+}
 </script>
 
 <style>

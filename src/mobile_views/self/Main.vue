@@ -22,44 +22,44 @@
             </van-col>
         </van-row>
 
-        <van-cell class="mobile-border mobile-margin-top" title="　github.com/GitHub-Laziji" icon="sign" url="https://github.com/GitHub-Laziji"
+        <van-cell class="mobile-border mobile-margin-top" title="github.com/GitHub-Laziji" icon="sign" :url="`https://github.com/${githubUsername}`"
             is-link />
 
-        <van-cell class="mobile-border mobile-margin-top" title="　项目源码" icon="logistics" url="https://github.com/GitHub-Laziji/VBlog"
+        <van-cell class="mobile-border mobile-margin-top" title="项目源码" icon="logistics" :url="`https://github.com/${githubUsername}/VBlog`"
             is-link />
 
-        <van-cell class="mobile-border mobile-margin-top" title="　其他博客" icon="password-view" :url="blog" is-link />
+        <van-cell class="mobile-border mobile-margin-top" title="其他博客" icon="password-view" :url="blog" is-link />
 
     </div>
 </template>
 
 <script>
-    import { mapGetters } from 'vuex'
-    export default {
-        data() {
-            return {
-                windowSize: this.$util.getWindowSize()
-            }
-        },
-        computed: {
-            ...mapGetters([
-                'githubUsername',
-                'avatarUrl',
-                'name',
-                'location',
-                'blog',
-                'followersTotal',
-                'followingTotal'
-            ])
-        },
-        mounted() {
-            // this.$toast({
-            //     message: '移动端开发中... 请在电脑上查看',
-            //     duration: 5000
-            // })
-        },
-        methods: {
-
-        }
+import { mapGetters } from 'vuex'
+export default {
+  data () {
+    return {
+      windowSize: this.$util.getWindowSize()
     }
+  },
+  computed: {
+    ...mapGetters([
+      'githubUsername',
+      'avatarUrl',
+      'name',
+      'location',
+      'blog',
+      'followersTotal',
+      'followingTotal'
+    ])
+  },
+  mounted () {
+    // this.$toast({
+    //     message: '移动端开发中... 请在电脑上查看',
+    //     duration: 5000
+    // })
+  },
+  methods: {
+
+  }
+}
 </script>

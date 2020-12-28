@@ -7,9 +7,9 @@
 </template>
 
 <script>
-    export default {
-        name: 'AppMain'
-    }
+export default {
+  name: 'AppMain'
+}
 </script>
 
 <style>

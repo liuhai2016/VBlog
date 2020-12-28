@@ -27,58 +27,56 @@
     </div>
 </template>
 <script>
-    import { mapGetters } from 'vuex'
-    import GistApi from '@/api/gist'
-    export default {
-        data() {
-            return {
-                blog: {
-                    id: "",
-                    title: "",
-                    content: "",
-                    description: ""
-                },
-                loading: false,
-            }
-        },
-        computed: {
-            ...mapGetters([
-                'token',
-            ])
-        },
-        mounted() {
-            this.loading = true
-            this.blog.id = this.$route.params.id
-            // console.log(this.$route.params.id)
-            GistApi.single(this.blog.id).then((response) => {
-                let result = response.data
-                for (let key in result.files) {
-                    this.blog['title'] = key
-                    this.blog['content'] = this.$markdown(result.files[key]['content'])
-                    this.blog['description'] = result['description']
-                    this.blog['createTime'] = this.$util.utcToLocal(result['created_at'])
-                    this.blog['updateTime'] = this.$util.utcToLocal(result['updated_at'])
-                    // console.log(JSON.stringify(this.blog))
-                    break
-                }
-            }).then(() => this.loading = false)
-
-
-        },
-        methods: {
-            edit() {
-                if (!this.token) {
-                    this.$message({
-                        message: '请绑定有效的Token',
-                        type: 'warning'
-                    })
-                    return
-                }
-                this.$router.push('/user/blog/edit/' + this.blog.id)
-            },
-            more() {
-                this.$router.push('/user/blog/main')
-            }
-        }
+import { mapGetters } from 'vuex'
+import GistApi from '@/api/gist'
+export default {
+  data () {
+    return {
+      blog: {
+        id: '',
+        title: '',
+        content: '',
+        description: ''
+      },
+      loading: false
     }
+  },
+  computed: {
+    ...mapGetters([
+      'token'
+    ])
+  },
+  mounted () {
+    this.loading = true
+    this.blog.id = this.$route.params.id
+    // console.log(this.$route.params.id)
+    GistApi.single(this.blog.id).then((response) => {
+      let result = response.data
+      for (let key in result.files) {
+        this.blog['title'] = key
+        this.blog['content'] = this.$markdown(result.files[key]['content'])
+        this.blog['description'] = result['description']
+        this.blog['createTime'] = this.$util.utcToLocal(result['created_at'])
+        this.blog['updateTime'] = this.$util.utcToLocal(result['updated_at'])
+        // console.log(JSON.stringify(this.blog))
+        break
+      }
+    }).then(() => this.loading = false)
+  },
+  methods: {
+    edit () {
+      if (!this.token) {
+        this.$message({
+          message: '请绑定有效的Token',
+          type: 'warning'
+        })
+        return
+      }
+      this.$router.push('/user/blog/edit/' + this.blog.id)
+    },
+    more () {
+      this.$router.push('/user/blog/main')
+    }
+  }
+}
 </script>

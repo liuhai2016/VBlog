@@ -47,42 +47,42 @@
     </div>
 </template>
 <script>
-    import UserApi from '@/api/user'
-    export default {
-        data() {
-            return {
-                loading: false,
-                githubUsername: this.$route.params.name,
-                name: null,
-                avatarUrl: null,
-                htmlUrl: null,
-                blog: null,
-                location: null,
-                email: null,
-                bio: null,
-                followers: null,
-                following: null,
-                publicRepos: null
-            }
-        },
-        mounted() {
-            this.loading = true
-            UserApi.info(this.githubUsername).then((response) => {
-                let result = response.data
-                this.name = result["name"]
-                this.avatarUrl = result["avatar_url"]
-                this.htmlUrl = result["html_url"]
-                this.blog = result["blog"]
-                this.location = result["location"]
-                this.bio = result["bio"]
-                this.email = result["email"]
-                this.followers = result["followers"]
-                this.following = result["following"]
-                this.publicRepos = result["publicRepos"]
-            }).then(() => this.loading = false)
-        },
-        methods: {
-
-        }
+import UserApi from '@/api/user'
+export default {
+  data () {
+    return {
+      loading: false,
+      githubUsername: this.$route.params.name,
+      name: null,
+      avatarUrl: null,
+      htmlUrl: null,
+      blog: null,
+      location: null,
+      email: null,
+      bio: null,
+      followers: null,
+      following: null,
+      publicRepos: null
     }
+  },
+  mounted () {
+    this.loading = true
+    UserApi.info(this.githubUsername).then((response) => {
+      let result = response.data
+      this.name = result['name']
+      this.avatarUrl = result['avatar_url']
+      this.htmlUrl = result['html_url']
+      this.blog = result['blog']
+      this.location = result['location']
+      this.bio = result['bio']
+      this.email = result['email']
+      this.followers = result['followers']
+      this.following = result['following']
+      this.publicRepos = result['publicRepos']
+    }).then(() => this.loading = false)
+  },
+  methods: {
+
+  }
+}
 </script>

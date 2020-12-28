@@ -63,7 +63,6 @@
                             </el-form-item>
                         </div>
 
-
                     </el-tab-pane>
                     <el-tab-pane label="扩展配置" name="extend" style="padding: 5px">
                         <el-form-item label="其他网站">
@@ -94,117 +93,113 @@
     </div>
 </template>
 <script>
-    import { mapGetters } from 'vuex'
-    import ProjectApi from '@/api/project'
-    export default {
-        data() {
-            return {
-                activeTab: "base",
-                loading: false,
-                configureSha: null,
-                configure: {
-                    webSites: []
-                },
-                initConfigure: {},
-                rules: {
-                    githubUsername: [
-                        { required: true, message: '请输入用户名', trigger: 'blur' },
-                    ],
-                    blogTitle: [
-                        // { required: true, message: '请输入用户名', trigger: 'blur' },
-                    ],
-                    blogTitle: [
-                        // { required: true, message: '请输入用户名', trigger: 'blur' },
-                    ]
-                },
-                submitButton: {
-                    loading: false,
-                    disabled: false
-                },
-                predefineColors: [
-                    '#ff4500',
-                    '#ff8c00',
-                    '#ffd700',
-                    '#CCFC2D',
-                    '#90ee90',
-                    '#2DFCA6',
-                    '#00ced1',
-                    '#1e90ff',
-                    '#c71585',
-                    '#FC2DEB'
-                ]
-            }
-        },
-        computed: {
-            ...mapGetters([
-                'token'
-            ])
-        },
-        mounted() {
-            if (!this.token) {
-                this.$nextTick(() => {
-                    this.$message({
-                        message: '权限不足',
-                        type: 'error'
-                    })
-                    this.$router.go(-1)
-                })
-                return
-            }
-            this.loading = true
-            ProjectApi.getBlogConfigure().then((response) => {
-                let result = response.data
-                let base64 = require('js-base64').Base64
-                let text = base64.decode(result.content)
-                this.configure = JSON.parse(text)
-                if (!this.configure.webSites) {
-                    this.$set(this.configure, "webSites", [])
-                }
-                this.initConfigure = JSON.parse(JSON.stringify(this.configure))
-                this.configureSha = result.sha
-            }).then(() => this.loading = false)
-        },
-        methods: {
-            submit() {
-                this.$refs['configureForm'].validate((valid) => {
-                    if (valid) {
-                        this.submitButton.loading = true
-                        this.submitButton.disabled = true
-                        ProjectApi.editBlogConfigure(this.configure, this.configureSha).then((response) => {
-                            let result = response.data
-                            this.configureSha = result.content.sha
-                            this.initConfigure = JSON.parse(JSON.stringify(this.configure))
-                            this.$store.dispatch("LocalReload", this.configure)
-                            this.$notify({
-                                title: '成功',
-                                message: '修改配置成功',
-                                type: 'success'
-                            })
-                            // this.$message({
-                            //     message: '修改成功',
-                            //     type: 'success'
-                            // })
-                        }).then(() => {
-                            this.submitButton.loading = false
-                            this.submitButton.disabled = false
-                        })
-                    }
-                })
-            },
-            reset() {
-                this.configure = JSON.parse(JSON.stringify(this.initConfigure))
-            },
-            addWebSites() {
-                if (this.configure.webSites.length >= 5) {
-                    this.$message("站点太多显示效果不好")
-                    return
-                }
-                this.configure.webSites.push({})
-
-            },
-            removeWebSites(index) {
-                this.configure.webSites.splice(index,1)
-            }
-        }
+import { mapGetters } from 'vuex'
+import ProjectApi from '@/api/project'
+export default {
+  data () {
+    return {
+      activeTab: 'base',
+      loading: false,
+      configureSha: null,
+      configure: {
+        webSites: []
+      },
+      initConfigure: {},
+      rules: {
+        githubUsername: [
+          { required: true, message: '请输入用户名', trigger: 'blur' }
+        ],
+        blogTitle: [
+          // { required: true, message: '请输入用户名', trigger: 'blur' },
+        ]
+      },
+      submitButton: {
+        loading: false,
+        disabled: false
+      },
+      predefineColors: [
+        '#ff4500',
+        '#ff8c00',
+        '#ffd700',
+        '#CCFC2D',
+        '#90ee90',
+        '#2DFCA6',
+        '#00ced1',
+        '#1e90ff',
+        '#c71585',
+        '#FC2DEB'
+      ]
     }
+  },
+  computed: {
+    ...mapGetters([
+      'token'
+    ])
+  },
+  mounted () {
+    if (!this.token) {
+      this.$nextTick(() => {
+        this.$message({
+          message: '权限不足',
+          type: 'error'
+        })
+        this.$router.go(-1)
+      })
+      return
+    }
+    this.loading = true
+    ProjectApi.getBlogConfigure().then((response) => {
+      let result = response.data
+      let base64 = require('js-base64').Base64
+      let text = base64.decode(result.content)
+      this.configure = JSON.parse(text)
+      if (!this.configure.webSites) {
+        this.$set(this.configure, 'webSites', [])
+      }
+      this.initConfigure = JSON.parse(JSON.stringify(this.configure))
+      this.configureSha = result.sha
+    }).then(() => this.loading = false)
+  },
+  methods: {
+    submit () {
+      this.$refs['configureForm'].validate((valid) => {
+        if (valid) {
+          this.submitButton.loading = true
+          this.submitButton.disabled = true
+          ProjectApi.editBlogConfigure(this.configure, this.configureSha).then((response) => {
+            let result = response.data
+            this.configureSha = result.content.sha
+            this.initConfigure = JSON.parse(JSON.stringify(this.configure))
+            this.$store.dispatch('LocalReload', this.configure)
+            this.$notify({
+              title: '成功',
+              message: '修改配置成功',
+              type: 'success'
+            })
+            // this.$message({
+            //     message: '修改成功',
+            //     type: 'success'
+            // })
+          }).then(() => {
+            this.submitButton.loading = false
+            this.submitButton.disabled = false
+          })
+        }
+      })
+    },
+    reset () {
+      this.configure = JSON.parse(JSON.stringify(this.initConfigure))
+    },
+    addWebSites () {
+      if (this.configure.webSites.length >= 5) {
+        this.$message('站点太多显示效果不好')
+        return
+      }
+      this.configure.webSites.push({})
+    },
+    removeWebSites (index) {
+      this.configure.webSites.splice(index, 1)
+    }
+  }
+}
 </script>

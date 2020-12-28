@@ -15,44 +15,41 @@
     </div>
 </template>
 
-
 <script>
-    import { mapGetters } from 'vuex'
-    import GistApi from '@/api/gist'
-    export default {
-        data() {
-            return {
-                blog: {
-                    id: "",
-                    title: "",
-                    content: "",
-                    description: ""
-                }
-            }
-
-        },
-        mounted() {
-            this.$toast.loading({
-                duration: 0,
-                forbidClick: true,
-                message: '加载中'
-            })
-            this.blog.id = this.$route.params.id
-            GistApi.single(this.blog.id).then((response) => {
-                let result = response.data
-                for (let key in result.files) {
-                    this.blog['title'] = key
-                    this.blog['content'] = this.$markdown(result.files[key]['content'])
-                    this.blog['description'] = result['description']
-                    this.blog['createTime'] = this.$util.utcToLocal(result['created_at'])
-                    this.blog['updateTime'] = this.$util.utcToLocal(result['updated_at'])
-                    break
-                }
-            }).then(() => this.$toast.clear())
-        },
-        methods: {
-            
-        }
-
+import GistApi from '@/api/gist'
+export default {
+  data () {
+    return {
+      blog: {
+        id: '',
+        title: '',
+        content: '',
+        description: ''
+      }
     }
+  },
+  mounted () {
+    this.$toast.loading({
+      duration: 0,
+      forbidClick: true,
+      message: '加载中'
+    })
+    this.blog.id = this.$route.params.id
+    GistApi.single(this.blog.id).then((response) => {
+      let result = response.data
+      for (let key in result.files) {
+        this.blog['title'] = key
+        this.blog['content'] = this.$markdown(result.files[key]['content'])
+        this.blog['description'] = result['description']
+        this.blog['createTime'] = this.$util.utcToLocal(result['created_at'])
+        this.blog['updateTime'] = this.$util.utcToLocal(result['updated_at'])
+        break
+      }
+    }).then(() => this.$toast.clear())
+  },
+  methods: {
+
+  }
+
+}
 </script>

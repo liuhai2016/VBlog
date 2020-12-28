@@ -27,45 +27,43 @@
 </template>
 
 <script>
-    import { mapGetters } from 'vuex'
-    import ProjectApi from '@/api/project'
-    export default {
-        data() {
-            return {
-                project: {
-                    name: "",
-                    createTime: ""
-                }
-            }
-        },
-
-        mounted() {
-            this.$toast.loading({
-                duration: 0,
-                forbidClick: true,
-                message: '加载中'
-            })
-            this.project.name = this.$route.params.name
-            ProjectApi.single(this.project.name).then((response) => {
-                let result = response.data
-
-                let base64 = require('js-base64').Base64
-                this.project.id = result['id']
-                this.project.url = result['html_url']
-                this.project.stargazersCount = result['stargazers_count']
-                this.project.watchersCount = result['watchers_count']
-                this.project.forksCount = result['forks_count']
-                this.project.language = result['language']
-                this.project.description = result['description']
-                this.project.license = result['license'] ? result['license']['spdx_id'] : null
-                this.project.content = this.$markdown(base64.decode(result['readme_content']))
-                this.project.createTime = this.$util.utcToLocal(result['created_at'])
-                this.project.updateTime = this.$util.utcToLocal(result['updated_at'])
-            }).then(() => this.$toast.clear())
-
-        },
-        methods: {
-
-        }
+import ProjectApi from '@/api/project'
+export default {
+  data () {
+    return {
+      project: {
+        name: '',
+        createTime: ''
+      }
     }
+  },
+
+  mounted () {
+    this.$toast.loading({
+      duration: 0,
+      forbidClick: true,
+      message: '加载中'
+    })
+    this.project.name = this.$route.params.name
+    ProjectApi.single(this.project.name).then((response) => {
+      let result = response.data
+
+      let base64 = require('js-base64').Base64
+      this.project.id = result['id']
+      this.project.url = result['html_url']
+      this.project.stargazersCount = result['stargazers_count']
+      this.project.watchersCount = result['watchers_count']
+      this.project.forksCount = result['forks_count']
+      this.project.language = result['language']
+      this.project.description = result['description']
+      this.project.license = result['license'] ? result['license']['spdx_id'] : null
+      this.project.content = this.$markdown(base64.decode(result['readme_content']))
+      this.project.createTime = this.$util.utcToLocal(result['created_at'])
+      this.project.updateTime = this.$util.utcToLocal(result['updated_at'])
+    }).then(() => this.$toast.clear())
+  },
+  methods: {
+
+  }
+}
 </script>
